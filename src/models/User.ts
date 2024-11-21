@@ -23,6 +23,18 @@ const User = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    organizations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // Refers to another User document (not organization)
+      },
+    ],
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // Refers to user members (for organizations only)
+      },
+    ],
     isVerified: {
       type: Boolean,
       default: false,
