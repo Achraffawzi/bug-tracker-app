@@ -3,6 +3,10 @@ export type User = {
   picture?: string;
   isOrganization?: boolean;
   isVerified?: boolean;
+  email: string;
+  password: string;
+  organizations?: string[];
+  members: string[];
 };
 
 export enum Priority {
