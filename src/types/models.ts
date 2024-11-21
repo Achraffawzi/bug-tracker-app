@@ -1,4 +1,4 @@
-export type User = {
+export type UserType = {
   name: string;
   picture?: string;
   isOrganization?: boolean;
@@ -21,7 +21,7 @@ export enum Status {
   Closed = "closed",
 }
 
-export type Bug = {
+export type BugType = {
   title: string;
   description: string;
   priority: Priority;
