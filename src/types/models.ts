@@ -6,7 +6,7 @@ export type UserType = {
   email: string;
   password: string;
   organizations?: string[];
-  members: string[];
+  members?: string[];
 };
 
 export enum Priority {
