@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
 import { register } from "@/services/auth/register";
 import { getUserByEmail } from "@/services/user";
-import { base64_encode, fileToBase64 } from "@/utils/conversion";
+// import { base64_encode, fileToBase64 } from "@/utils/conversion";
+import { sendEmail } from "@/lib/mail";
+import { hashPassword } from "@/lib/auth";
 
 export async function POST(request: Request) {
   /**
@@ -30,7 +32,7 @@ export async function POST(request: Request) {
     if (user) {
       return new Response("User already exists", { status: 400 });
     }
-    const hashPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
     const base64Image = "/avatar.png";
     // //TODO: store picture in db
     // if (picture) {
@@ -39,11 +41,16 @@ export async function POST(request: Request) {
     const newUser = await register({
       name,
       email,
-      password: hashPassword,
+      password: hashedPassword,
       picture: base64Image,
       isOrganization,
     });
     // //TODO: send verification email
+    // await sendEmail(
+    //   email,
+    //   "Verify Your Email",
+    //   `<a href='${process.env.CLIENT_URL}/api/organization/invite/accept?orgId=${organizationId}&userId=${userId}' style='background: red; color: white; padding: 10px;' onclick="alert('accepted invite')">Accept invite</a>`
+    // );
     return new Response(JSON.stringify(newUser), { status: 201 });
   } catch (e: any) {
     return new Response(e.message, { status: 400 });

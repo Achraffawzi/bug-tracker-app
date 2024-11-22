@@ -1,4 +1,5 @@
 export type UserType = {
+  _id: any;
   name: string;
   picture?: string;
   isOrganization?: boolean;
