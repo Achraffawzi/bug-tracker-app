@@ -20,9 +20,6 @@ export async function POST(request: NextRequest) {
     const organizationId = JSON.parse(cookie?.value).userId!;
     const isOrganization = JSON.parse(cookie?.value).isOrganization!;
 
-    console.log(organizationId);
-    console.log(isOrganization);
-
     if (!userId) {
       return NextResponse.json(
         "Please provide a user to be added to your organization",

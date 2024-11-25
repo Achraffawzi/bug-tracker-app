@@ -20,7 +20,9 @@ export async function middleware(request: NextRequest) {
 
   const decodedToken = await verifyToken(token, process.env.JWT_SECRET_KEY!);
 
-  console.log("typeof: " + typeof decodedToken);
+  if (!decodedToken.isOrganization) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   const response = NextResponse.next();
 
@@ -48,5 +50,5 @@ export async function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/organization/invite",
+  matcher: ["/organization/invite", "/bug"],
 };
