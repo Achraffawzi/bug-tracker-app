@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     (await cookies()).set(
       "access-token",
-      generateAccessToken(user._id!.toString()),
+      generateAccessToken(user._id!.toString(), user.isOrganization!),
       {
         secure: true,
         httpOnly: true,
