@@ -7,3 +7,8 @@ export async function createBug(data: Partial<BugType>) {
   const bug = new Bug(data);
   await bug.save();
 }
+
+export async function updateBug(id: string, data: Partial<BugType>) {
+  await connectDB();
+  await Bug.findByIdAndUpdate(id, data, { new: true });
+}

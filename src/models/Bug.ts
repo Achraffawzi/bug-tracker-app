@@ -48,4 +48,4 @@ const Bug = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Bug", Bug);
+export default mongoose.models.Bug || mongoose.model("Bug", Bug);
