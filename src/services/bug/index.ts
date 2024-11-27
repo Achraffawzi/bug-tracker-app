@@ -13,7 +13,20 @@ export async function updateBug(id: string, data: Partial<BugType>) {
   await Bug.findByIdAndUpdate(id, data, { new: true });
 }
 
-export async function getBugs(organizationId: string) {
-  await connectDB();
-  return Bug.find({ organizationId });
+export async function getBugsWithPagination(
+  organizationId: string,
+  page: number,
+  pageSize: number
+) {
+  const skip = (page - 1) * pageSize;
+
+  // Assuming a MongoDB-like query
+  const bugs = await Bug.find({ organizationId })
+    .skip(skip)
+    .limit(pageSize)
+    .exec();
+
+  const total = await Bug.countDocuments({ organizationId }).exec();
+
+  return { bugs, total };
 }

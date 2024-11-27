@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createBug, getBugs } from "@/services/bug";
+import { createBug, getBugsWithPagination } from "@/services/bug";
 
 export async function POST(request: NextRequest) {
   /**
@@ -53,13 +53,53 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    // Parse the query parameters
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
+    const pageSize = parseInt(searchParams.get("pageSize") || "10", 10); // Default to 10 items per page
+
+    // Validate pagination parameters
+    if (page <= 0 || pageSize <= 0) {
+      return NextResponse.json(
+        { message: "Page and pageSize must be positive integers." },
+        { status: 400 }
+      );
+    }
+
+    // Retrieve the cookie for organization ID
     const cookie = request.cookies.get("decoded-token-values");
-    const organizationId = JSON.parse(cookie?.value).userId!;
+    if (!cookie) {
+      return NextResponse.json(
+        { message: "Authentication cookie is missing." },
+        { status: 401 }
+      );
+    }
 
-    const bugs = await getBugs(organizationId);
+    const organizationId = JSON.parse(cookie.value).userId;
 
-    return NextResponse.json({ result: bugs }, { status: 200 });
+    // Fetch paginated bugs
+    const { bugs, total } = await getBugsWithPagination(
+      organizationId,
+      page,
+      pageSize
+    );
+
+    return NextResponse.json(
+      {
+        result: bugs,
+        pagination: {
+          page,
+          pageSize,
+          total,
+          totalPages: Math.ceil(total / pageSize),
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json({ body: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
