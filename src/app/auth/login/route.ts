@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    return NextResponse.json({ loggedIn: true });
+    return NextResponse.json({ result: true });
   } catch (e) {
     return NextResponse.json({ message: e.message }, { status: 500 });
   }

@@ -48,7 +48,7 @@ export async function PATCH(
 
     const updatedBug = await updateBug(id, updatePayload);
 
-    return NextResponse.json({ newBug: updatedBug }, { status: 200 });
+    return NextResponse.json({ result: updatedBug }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ body: error.message }, { status: 500 });
   }

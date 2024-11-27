@@ -12,3 +12,8 @@ export async function updateBug(id: string, data: Partial<BugType>) {
   await connectDB();
   await Bug.findByIdAndUpdate(id, data, { new: true });
 }
+
+export async function getBugs(organizationId: string) {
+  await connectDB();
+  return Bug.find({ organizationId });
+}

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createBug } from "@/services/bug";
+import { createBug, getBugs } from "@/services/bug";
 
 export async function POST(request: NextRequest) {
   /**
@@ -43,9 +43,22 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { body: "bug created successfully" },
+      { result: "bug created successfully" },
       { status: 201 }
     );
+  } catch (error) {
+    return NextResponse.json({ body: error.message }, { status: 500 });
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const cookie = request.cookies.get("decoded-token-values");
+    const organizationId = JSON.parse(cookie?.value).userId!;
+
+    const bugs = await getBugs(organizationId);
+
+    return NextResponse.json({ result: bugs }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ body: error.message }, { status: 500 });
   }
