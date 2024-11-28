@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createBug, getBugsWithPagination } from "@/services/bug";
+import { createBug, deleteBug, getBugsWithPagination } from "@/services/bug";
 
 export async function POST(request: NextRequest) {
   /**
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     // Parse the query parameters
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10); // Default to page 1
-    const pageSize = parseInt(searchParams.get("pageSize") || "10", 10); // Default to 10 items per page
+    const pageSize = parseInt(searchParams.get("pageSize") || "5", 10); // Default to 10 items per page
 
     // Validate pagination parameters
     if (page <= 0 || pageSize <= 0) {

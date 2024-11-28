@@ -30,3 +30,13 @@ export async function getBugsWithPagination(
 
   return { bugs, total };
 }
+
+export async function getBugById(id: string) {
+  await connectDB();
+  return Bug.findById(id).exec();
+}
+
+export async function deleteBug(id: string) {
+  await connectDB();
+  await Bug.findByIdAndDelete(id).exec();
+}

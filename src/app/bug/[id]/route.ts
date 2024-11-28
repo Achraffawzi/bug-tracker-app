@@ -1,4 +1,4 @@
-import { updateBug } from "@/services/bug";
+import { deleteBug, updateBug } from "@/services/bug";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
@@ -51,5 +51,45 @@ export async function PATCH(
     return NextResponse.json({ result: updatedBug }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ body: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Bug ID is required." },
+        { status: 400 }
+      );
+    }
+
+    // Retrieve the cookie for organization ID
+    const cookie = request.cookies.get("decoded-token-values");
+    if (!cookie) {
+      return NextResponse.json(
+        { message: "Authentication cookie is missing." },
+        { status: 401 }
+      );
+    }
+
+    // const organizationId = JSON.parse(cookie.value).userId;
+
+    // Delete the bug
+    await deleteBug(id);
+
+    return NextResponse.json(
+      { result: "Bug deleted successfully." },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
